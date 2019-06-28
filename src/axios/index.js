@@ -3,7 +3,7 @@ import Axios from 'axios';
 import qs from 'qs';
 
 const axios = Axios.create({
-    baseURL: baseUrl,
+    baseURL: '',
     transformRequest: [function (data) {
         data = qs.parse(data);
         data = qs.stringify(data);
