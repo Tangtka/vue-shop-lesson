@@ -1,0 +1,14 @@
+{
+  "name": "vue-shop-server",
+  "version": "1.0.0",
+  "description": "vue商城练习服务端",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
