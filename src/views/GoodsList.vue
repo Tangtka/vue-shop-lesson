@@ -21,8 +21,8 @@
                         <dl class="filter-price">
                             <dt>价格区间:</dt>
                             <dd><a href="javascript:void(0)">选择价格</a></dd>
-                            <dd>
-                                <a href="javascript:void(0)">￥ 0 - 100 元</a>
+                            <dd v-for="item in priceFilter" :key="item.startPrice">
+                                <a href="javascript:void(0)">￥ {{item.startPrice}} - {{item.endPrice}} 元</a>
                             </dd>
                         </dl>
                     </div>
@@ -69,6 +69,32 @@
         data() {
             return {
                 goodsList: [],
+                priceFilter:[
+                    {
+                        startPrice:'0.00',
+                        endPrice:'100.00'
+                    },
+                    {
+                        startPrice:'100.00',
+                        endPrice:'500.00'
+                    },
+                    {
+                        startPrice:'500.00',
+                        endPrice:'1000.00'
+                    },
+                    {
+                        startPrice:'1000.00',
+                        endPrice:'2000.00'
+                    },
+                    {
+                        startPrice:'2000.00',
+                        endPrice:'3000.00'
+                    },
+                    {
+                        startPrice:'3000.00',
+                        endPrice:'6000.00'
+                    }
+                ],
             }
         },
         mounted() {
@@ -78,7 +104,6 @@
             //获取商品列表
             getGoodsList() {
                 this.$http.GET('/goods', {}, (respData) => {
-                    console.log(respData);
                     this.goodsList = respData.result;
                 })
             },
