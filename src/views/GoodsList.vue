@@ -20,9 +20,9 @@
                     <div class="filter" id="filter">
                         <dl class="filter-price">
                             <dt>价格区间:</dt>
-                            <dd><a href="javascript:void(0)">选择价格</a></dd>
-                            <dd v-for="item in priceFilter" :key="item.startPrice">
-                                <a href="javascript:void(0)">￥ {{item.startPrice}} - {{item.endPrice}} 元</a>
+                            <dd><a href="javascript:void(0)" @click="setPriceFilter('all')" :class="{'cur':priceChecked === 'all'}">选择价格</a></dd>
+                            <dd v-for="(item,index) in priceFilter" :key="item.index">
+                                <a href="javascript:void(0)" @click="setPriceFilter(index)" :class="{'cur':priceChecked === index}">￥ {{item.startPrice}} - {{item.endPrice}} 元</a>
                             </dd>
                         </dl>
                     </div>
@@ -95,6 +95,7 @@
                         endPrice:'6000.00'
                     }
                 ],
+                priceChecked:'all'
             }
         },
         mounted() {
@@ -107,6 +108,11 @@
                     this.goodsList = respData.result;
                 })
             },
+
+            //过滤价格
+            setPriceFilter(index){
+                this.priceChecked = index;
+            }
         },
     }
 </script>
