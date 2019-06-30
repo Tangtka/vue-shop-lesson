@@ -6,6 +6,7 @@ module.exports = {
     productionSourceMap: false, // 是否生成 sourceMap 文件
     devServer: {
         port: 5980, //端口
+        proxy:'http://192.168.2.15:59898',
     },
     configureWebpack:(config)=>{
         if (process.env.NODE_ENV === 'production') {

@@ -8,7 +8,11 @@
                 <div class="filter-nav">
                     <span class="sortby">排序:</span>
                     <a href="javascript:void(0)" class="default cur">默认</a>
-                    <a href="javascript:void(0)" class="price">价格 <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
+                    <a href="javascript:void(0)" class="price">价格
+                        <svg class="icon icon-arrow-short">
+                            <use xlink:href="#icon-arrow-short"></use>
+                        </svg>
+                    </a>
                     <a href="javascript:void(0)" class="filterby">筛选</a>
                 </div>
                 <div class="accessory-result">
@@ -60,79 +64,24 @@
     export default {
         name: 'GoodsList',
         components: {
-            NavHeader,NavBread,NavFooter
+            NavHeader, NavBread, NavFooter
         },
         data() {
             return {
-                goodsList:[
-                    {
-                        "productId":"10001",
-                        "productName":"小米空气净化器 2",
-                        "salePrice":"699",
-                        "productImage":"http://pegasus.org.cn:59889/lka1/vue-shop-img/小米空气净化器 2.jpg"
-                    },
-                    {
-                        "productId":"10002",
-                        "productName":"米家空气净化器Pro",
-                        "salePrice":"1499",
-                        "productImage":"http://pegasus.org.cn:59889/lka1/vue-shop-img/米家空气净化器Pro.jpg"
-                    },
-                    {
-                        "productId":"10003",
-                        "productName":"米家PM2.5检测仪",
-                        "salePrice":"399",
-                        "productImage":"http://pegasus.org.cn:59889/lka1/vue-shop-img/米家PM2.5检测仪.jpg"
-                    },
-                    {
-                        "productId":"10004",
-                        "productName":"九号平衡车",
-                        "salePrice":"1999",
-                        "productImage":"http://pegasus.org.cn:59889/lka1/vue-shop-img/九号平衡车.jpg"
-                    },
-                    {
-                        "productId":"10005",
-                        "productName":"小米路由器 3",
-                        "salePrice":"139",
-                        "productImage":"http://pegasus.org.cn:59889/lka1/vue-shop-img/小米路由器 3.jpg"
-                    },
-                    {
-                        "productId":"10006",
-                        "productName":"米家压力 IH 电饭煲",
-                        "salePrice":"999",
-                        "productImage":"http://pegasus.org.cn:59889/lka1/vue-shop-img/米家压力 IH 电饭煲.jpg"
-                    },
-                    {
-                        "productId":"10007",
-                        "productName":"米家IH电饭煲",
-                        "salePrice":"399",
-                        "productImage":"http://pegasus.org.cn:59889/lka1/vue-shop-img/米家IH电饭煲.jpg"
-                    },
-                    {
-                        "productId":"10008",
-                        "productName":"米家恒温电水壶",
-                        "salePrice":"199",
-                        "productImage":"http://pegasus.org.cn:59889/lka1/vue-shop-img/米家恒温电水壶.jpg"
-                    },
-                    {
-                        "productId":"10009",
-                        "productName":"米家小白智能摄像机",
-                        "salePrice":"399",
-                        "productImage":"http://pegasus.org.cn:59889/lka1/vue-shop-img/米家小白智能摄像机.jpg"
-                    },
-                    {
-                        "productId":"10010",
-                        "productName":"Yeelight床头灯",
-                        "salePrice":"249",
-                        "productImage":"http://pegasus.org.cn:59889/lka1/vue-shop-img/Yeelight床头灯.jpg"
-                    }
-                ]
+                goodsList: [],
             }
         },
         mounted() {
-
+            this.getGoodsList();
         },
         methods: {
-
+            //获取商品列表
+            getGoodsList() {
+                this.$http.GET('/goods', {}, (respData) => {
+                    console.log(respData);
+                    this.goodsList = respData.result;
+                })
+            },
         },
     }
 </script>

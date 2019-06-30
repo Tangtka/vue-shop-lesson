@@ -18,11 +18,11 @@ const axios = Axios.create({
  * @param callback
  * @param err
  */
-const get=(url,params,callback,err)=>{
+const get = (url, params, callback, err) => {
 
-    axios.get(url,{params:params}).then((response)=>{
+    axios.get(url, {params: params}).then((response) => {
         callback(response.data);
-    }).catch((error)=>{
+    }).catch((error) => {
         if (typeof (err) == "undefined") {
             requestError(error);
         } else {
@@ -39,11 +39,11 @@ const get=(url,params,callback,err)=>{
  * @param callback
  * @param err
  */
-const post=(url,params,callback,err)=>{
+const post = (url, params, callback, err) => {
 
-    axios.post(url,params).then((response)=>{
+    axios.post(url, params).then((response) => {
         callback(response.data);
-    }).catch((error)=>{
+    }).catch((error) => {
         if (typeof (err) == "undefined") {
             requestError(error);
         } else {
@@ -93,10 +93,14 @@ const uploadFile = (path, files, callBackFun, listenerFun, errorFun) => {
 };
 
 const requestError = (error) => {
-    Vue.prototype.$base.showTip("服务器繁忙，请稍后重试");
+    console.log("服务器繁忙，请稍后重试");
 };
 
-
-Vue.prototype.GET = get;
-Vue.prototype.POST = post;
-Vue.prototype.uploadFile = uploadFile;
+export default {
+    GET : get,
+    POST : post,
+    uploadFile : uploadFile,
+}
+// Vue.prototype.GET = get;
+// Vue.prototype.POST = post;
+// Vue.prototype.uploadFile = uploadFile;

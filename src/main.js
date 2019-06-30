@@ -9,6 +9,7 @@ Vue.config.productionTip = false;
 // axios 挂载到vue原型上
 Vue.prototype.$http = axios;
 
+
 //引入base样式
 import './assets/css/base.css'
 
