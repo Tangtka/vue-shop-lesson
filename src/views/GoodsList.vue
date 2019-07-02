@@ -33,7 +33,7 @@
                             <ul>
                                 <li v-for="item in goodsList" :key="item.productId">
                                     <div class="pic">
-                                        <a href="#"><img v-lazy='item.productImage' alt=""></a>
+                                        <a href="#"><img v-lazy='$http.baseImgUrl+item.productImage' alt=""></a>
                                     </div>
                                     <div class="main">
                                         <div class="name">{{item.productName}}</div>
@@ -107,7 +107,8 @@
             //获取商品列表
             getGoodsList() {
                 this.$http.GET('/goods', {}, (respData) => {
-                    this.goodsList = respData.result;
+                    this.goodsList = respData.result.list;
+                    console.log( this.goodsList)
                 })
             },
 

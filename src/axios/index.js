@@ -2,8 +2,13 @@ import Vue from 'vue';
 import Axios from 'axios';
 import qs from 'qs';
 
+const baseUrl = '';
+const fileUploadUrl = '';
+const fileProjectName = '';
+const baseImgUrl = 'http://pegasus.org.cn:59889';
+
 const axios = Axios.create({
-    baseURL: '',
+    baseURL: baseUrl,
     transformRequest: [function (data) {
         data = qs.parse(data);
         data = qs.stringify(data);
@@ -100,6 +105,8 @@ export default {
     GET : get,
     POST : post,
     uploadFile : uploadFile,
+    baseImgUrl:baseImgUrl,
+
 }
 // Vue.prototype.GET = get;
 // Vue.prototype.POST = post;
