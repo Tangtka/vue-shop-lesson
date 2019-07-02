@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router/index.js'
 import axios from './axios/index.js'
 import vueLazyLoad from 'vue-lazyload'
+import infiniteScroll from 'vue-infinite-scroll'
 
 
 Vue.config.productionTip = false;
@@ -16,6 +17,8 @@ Vue.use(vueLazyLoad,{
     attempt:3
 });
 
+//滚动加载
+Vue.use(infiniteScroll);
 
 //引入base样式
 import './assets/css/base.css'

@@ -45,6 +45,14 @@
                                 </li>
                             </ul>
                         </div>
+
+                        <div class="view-more-normal"
+                             v-infinite-scroll="loadMore"
+                             infinite-scroll-disabled="busy"
+                             infinite-scroll-distance="20">
+                            <img src="./../assets/img/loading-spinning-bubbles.svg" v-show="loading">
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -68,7 +76,7 @@
         },
         data() {
             return {
-                goodsList: [],
+                goodsList: [], //数据列表
                 priceFilter:[
                     {
                         startPrice:'0.00',
@@ -94,15 +102,17 @@
                         startPrice:'3000.00',
                         endPrice:'6000.00'
                     }
-                ],
-                priceChecked:'all',
-                filterBy:false,
-                overLayFlag:false,
-                page:{
+                ], //价格过滤
+                priceChecked:'all', //价格全选
+                filterBy:false, //移动端显示价格过滤
+                overLayFlag:false,  //移动端显示筛选
+                page:{ //分页
                     num:1,
                     size:8,
                 },
-                sortFlag:true
+                sortFlag:true, //排序
+                busy:true, //是否下一页
+                loading:false //加载
 
             }
         },
@@ -111,19 +121,30 @@
         },
         methods: {
             //获取商品列表
-            getGoodsList() {
+            getGoodsList(flag) {
+                this.loading = true;
                 this.$http.GET('/goods', {
                     page:this.page.num,
                     pageSize:this.page.size,
                     sort:this.sortFlag?1:-1,
                 }, (respData) => {
                     if(respData.status === '0'){
-                        this.goodsList = respData.result.list;
-                        console.log( this.goodsList)
+                        if(flag){
+                            this.goodsList = this.goodsList.concat(respData.result.list);
+                            if(respData.result.count == 0){
+                                this.busy = true;
+                            }else{
+                                this.busy = false;
+                            }
+                        }else{
+                            this.goodsList = respData.result.list;
+                            this.busy = false;
+                        }
+
                     }else{
                         console.log(respData.msg)
                     }
-
+                    this.loading = false;
                 })
             },
 
@@ -144,15 +165,26 @@
                 this.overLayFlag = false;
             },
 
+            //默认排序
             defaultGoods(){
                 this.sortFlag = true;
                 this.page.num = 1;
                 this.getGoodsList();
             },
+
+            //升降序
             sortGoods(){
                 this.sortFlag = !this.sortFlag;
                 this.page.num = 1;
                 this.getGoodsList();
+            },
+
+            loadMore(){
+                this.busy = true;
+                setTimeout(()=>{
+                    this.page.num++;
+                    this.getGoodsList(true);
+                },500);
             },
         },
     }
