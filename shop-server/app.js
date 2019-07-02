@@ -20,6 +20,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//解决跨域
+app.all('*', function(req, res, next) {
+    // CORS配置
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+    res.header("Access-Control-Allow-Credentials", true);
+    res.header("X-Powered-By",' 3.2.1');
+    res.header("Content-Type", "application/json;charset=utf-8");
+    next();
+});
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/goods', goodsRouter);

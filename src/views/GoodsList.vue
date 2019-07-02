@@ -7,8 +7,8 @@
             <div class="container">
                 <div class="filter-nav">
                     <span class="sortby">排序:</span>
-                    <a href="javascript:void(0)" class="default cur">默认</a>
-                    <a href="javascript:void(0)" class="price">价格
+                    <a href="javascript:void(0)" class="default" :class="{cur:sortFlag}" @click="defaultGoods()">默认</a>
+                    <a href="javascript:void(0)" class="price" :class="{'sort-up cur':!sortFlag}" @click="sortGoods()">价格
                         <svg class="icon icon-arrow-short">
                             <use xlink:href="#icon-arrow-short"></use>
                         </svg>
@@ -98,6 +98,12 @@
                 priceChecked:'all',
                 filterBy:false,
                 overLayFlag:false,
+                page:{
+                    num:1,
+                    size:8,
+                },
+                sortFlag:true
+
             }
         },
         mounted() {
@@ -106,9 +112,18 @@
         methods: {
             //获取商品列表
             getGoodsList() {
-                this.$http.GET('/goods', {}, (respData) => {
-                    this.goodsList = respData.result.list;
-                    console.log( this.goodsList)
+                this.$http.GET('/goods', {
+                    page:this.page.num,
+                    pageSize:this.page.size,
+                    sort:this.sortFlag?1:-1,
+                }, (respData) => {
+                    if(respData.status === '0'){
+                        this.goodsList = respData.result.list;
+                        console.log( this.goodsList)
+                    }else{
+                        console.log(respData.msg)
+                    }
+
                 })
             },
 
@@ -127,7 +142,18 @@
             closePop(){
                 this.filterBy = false;
                 this.overLayFlag = false;
-            }
+            },
+
+            defaultGoods(){
+                this.sortFlag = true;
+                this.page.num = 1;
+                this.getGoodsList();
+            },
+            sortGoods(){
+                this.sortFlag = !this.sortFlag;
+                this.page.num = 1;
+                this.getGoodsList();
+            },
         },
     }
 </script>

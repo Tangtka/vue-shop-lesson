@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Axios from 'axios';
 import qs from 'qs';
 
-const baseUrl = '';
+const baseUrl = 'http://localhost:3000';
 const fileUploadUrl = '';
 const fileProjectName = '';
 const baseImgUrl = 'http://pegasus.org.cn:59889';
