@@ -39,7 +39,7 @@
                                         <div class="name">{{item.productName}}</div>
                                         <div class="price">{{item.salePrice}}</div>
                                         <div class="btn-area">
-                                            <a href="javascript:;" class="btn btn--m">加入购物车</a>
+                                            <a href="javascript:;" class="btn btn--m" @click="addCart(item.productId)">加入购物车</a>
                                         </div>
                                     </div>
                                 </li>
@@ -121,23 +121,22 @@
         },
         methods: {
             //获取商品列表
-            getGoodsList(flag) {
+            getGoodsList() {
                 this.loading = true;
                 this.$http.GET('/goods', {
                     page:this.page.num,
                     pageSize:this.page.size,
                     sort:this.sortFlag?1:-1,
+                    priceLevel:this.priceChecked
                 }, (respData) => {
                     if(respData.status === '0'){
-                        if(flag){
-                            this.goodsList = this.goodsList.concat(respData.result.list);
-                            if(respData.result.count == 0){
-                                this.busy = true;
-                            }else{
-                                this.busy = false;
-                            }
+                        if(this.page.num === 1){
+                            this.goodsList = [];
+                        }
+                        this.goodsList = this.goodsList.concat(respData.result.list);
+                        if(respData.result.count == 0){
+                            this.busy = true;
                         }else{
-                            this.goodsList = respData.result.list;
                             this.busy = false;
                         }
 
@@ -151,6 +150,8 @@
             //过滤价格
             setPriceFilter(index){
                 this.priceChecked = index;
+                this.page.num = 1;
+                this.getGoodsList();
             },
 
             //移动端显示筛选
@@ -183,8 +184,22 @@
                 this.busy = true;
                 setTimeout(()=>{
                     this.page.num++;
-                    this.getGoodsList(true);
+                    this.getGoodsList();
                 },500);
+            },
+
+            //加入购物车
+            addCart(productId){
+                this.$http.POST('/goods/addCart', {
+                    productId:productId,
+                }, (respData) => {
+                    if(respData.status === '0'){
+                        console.log(respData)
+
+                    }else{
+                        console.log(respData.msg)
+                    }
+                })
             },
         },
     }
