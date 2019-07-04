@@ -32,8 +32,9 @@
                     <div class="navbar-menu-container">
                         <!--<a href="/" class="navbar-link">我的账户</a>-->
                         <span class="navbar-link"></span>
-                        <a href="javascript:void(0)" class="navbar-link">登录</a>
-                        <!--<a href="javascript:void(0)" class="navbar-link">登出</a>-->
+                        <span class="navbar-link" v-if="nickName">{{nickName}}</span>
+                        <a href="javascript:void(0)" class="navbar-link" v-if="!nickName" @click="loginModalFlag = true">登录</a>
+                        <a href="javascript:void(0)" class="navbar-link" v-if="nickName" @click="logOut()">登出</a>
                         <div class="navbar-cart-container">
                             <span class="navbar-cart-count"></span>
                             <a class="navbar-link" href="/cart">
@@ -45,12 +46,47 @@
                     </div>
                 </div>
             </div>
+
+            <!-- 用户登录页弹层 -->
+            <div class="md-modal modal-msg md-modal-transition" v-bind:class="{'md-show':loginModalFlag}">
+                <div class="md-modal-inner">
+                    <div class="md-top">
+                        <div class="md-title">登录</div>
+                        <button class="md-close" @click="loginModalFlag=false">Close</button>
+                    </div>
+
+                    <div class="md-content">
+                        <div class="confirm-tips">
+                            <div class="error-wrap">
+                                <span class="error error-show" v-show="errorTip">用户名或者密码错误</span>
+                            </div>
+                            <ul>
+                                <li class="regi_form_input">
+                                    <i class="icon IconPeople"></i>
+                                    <input type="text" tabindex="1" name="loginname" v-model="userName" class="regi_login_input regi_login_input_left" placeholder="用户名" data-type="loginname">
+                                </li>
+                                <li class="regi_form_input noMargin">
+                                    <i class="icon IconPwd"></i>
+                                    <input type="password" tabindex="2"  name="password" v-model="userPwd" class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="密码" @keyup.enter="login">
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="login-wrap">
+                            <a href="javascript:void(0);" class="btn-login" @click="login()">登  录</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 遮罩层 -->
+            <div class="md-overlay" v-if="loginModalFlag" @click = "loginModalFlag = false"></div>
+
         </header>
     </div>
 </template>
 
 <script>
     import '../assets/css/nav-header.css'
+    import '../assets/css/login.css'
     export default {
         name: 'NavHeader',
         components: {
@@ -58,7 +94,11 @@
         },
         data() {
             return {
-
+                userName:'admin',
+                userPwd:'123456',
+                errorTip:false,
+                loginModalFlag:false,
+                nickName:'',
             }
         },
         mounted() {
@@ -66,6 +106,36 @@
         },
         methods: {
 
+            //登录
+            login(){
+                if(!this.userName || !this.userPwd){
+                    this.errorTip = true;
+                    return
+                }
+                this.$http.POST('/users/login', {
+                    userName:this.userName,
+                    userPwd:this.userPwd,
+                }, (respData) => {
+                    if(respData.status === '0'){
+                        this.errorTip = false;
+                        this.loginModalFlag = false;
+                        this.nickName = respData.result.userName;
+                    }else{
+                        console.log(respData.msg)
+                    }
+                })
+            },
+
+            //登出
+            logOut(){
+                this.$http.POST('/users/logout', {}, (respData) => {
+                    if(respData.status === '0'){
+                        this.nickName = '';
+                    }else{
+                        console.log(respData.msg)
+                    }
+                })
+            },
         },
     }
 </script>

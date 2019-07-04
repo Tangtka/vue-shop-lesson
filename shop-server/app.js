@@ -3,10 +3,23 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var mongoose = require('mongoose');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var goodsRouter = require('./routes/goods');
+
+//连接mongoDB 数据库
+mongoose.connect('mongodb://127.0.0.1:27017/vue_shop');
+mongoose.connection.on('connected', () => {
+    console.log('连接成功...')
+});
+mongoose.connection.on('error', () => {
+    console.log('连接失败...')
+});
+mongoose.connection.on('disconnected', () => {
+    console.log('断开连接...')
+});
 
 var app = express();
 
