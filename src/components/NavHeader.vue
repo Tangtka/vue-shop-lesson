@@ -102,7 +102,7 @@
             }
         },
         mounted() {
-
+            this.checkLogin();
         },
         methods: {
 
@@ -131,6 +131,18 @@
                 this.$http.POST('/users/logout', {}, (respData) => {
                     if(respData.status === '0'){
                         this.nickName = '';
+                    }else{
+                        console.log(respData.msg)
+                    }
+                })
+            },
+
+            //检查登录状态
+            checkLogin(){
+                this.$http.GET('/users/checkLogin', {}, (respData) => {
+                    if(respData.status === '0'){
+                        this.nickName = respData.result.userName;
+                        this.loginModalFlag = false;
                     }else{
                         console.log(respData.msg)
                     }
