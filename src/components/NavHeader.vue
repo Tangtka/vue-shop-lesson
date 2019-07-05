@@ -1,7 +1,8 @@
 <template>
     <div id="NavHeader">
         <header class="header">
-            <svg class="goods-svg" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <svg class="goods-svg" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                 xmlns:xlink="http://www.w3.org/1999/xlink">
                 <defs>
                     <symbol id="icon-arrow-short" viewBox="0 0 25 32">
                         <title>arrow-short</title>
@@ -33,7 +34,8 @@
                         <!--<a href="/" class="navbar-link">我的账户</a>-->
                         <span class="navbar-link"></span>
                         <span class="navbar-link" v-if="nickName">{{nickName}}</span>
-                        <a href="javascript:void(0)" class="navbar-link" v-if="!nickName" @click="loginModalFlag = true">登录</a>
+                        <a href="javascript:void(0)" class="navbar-link" v-if="!nickName"
+                           @click="loginModalFlag = true">登录</a>
                         <a href="javascript:void(0)" class="navbar-link" v-if="nickName" @click="logOut()">登出</a>
                         <div class="navbar-cart-container">
                             <span class="navbar-cart-count"></span>
@@ -63,22 +65,26 @@
                             <ul>
                                 <li class="regi_form_input">
                                     <i class="icon IconPeople"></i>
-                                    <input type="text" tabindex="1" name="loginname" v-model="userName" class="regi_login_input regi_login_input_left" placeholder="用户名" data-type="loginname">
+                                    <input type="text" tabindex="1" name="loginname" v-model="userName"
+                                           class="regi_login_input regi_login_input_left" placeholder="用户名"
+                                           data-type="loginname">
                                 </li>
                                 <li class="regi_form_input noMargin">
                                     <i class="icon IconPwd"></i>
-                                    <input type="password" tabindex="2"  name="password" v-model="userPwd" class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="密码" @keyup.enter="login">
+                                    <input type="password" tabindex="2" name="password" v-model="userPwd"
+                                           class="regi_login_input regi_login_input_left login-input-no input_text"
+                                           placeholder="密码" @keyup.enter="login">
                                 </li>
                             </ul>
                         </div>
                         <div class="login-wrap">
-                            <a href="javascript:void(0);" class="btn-login" @click="login()">登  录</a>
+                            <a href="javascript:void(0);" class="btn-login" @click="login()">登 录</a>
                         </div>
                     </div>
                 </div>
             </div>
             <!-- 遮罩层 -->
-            <div class="md-overlay" v-if="loginModalFlag" @click = "loginModalFlag = false"></div>
+            <div class="md-overlay" v-if="loginModalFlag" @click="loginModalFlag = false"></div>
 
         </header>
     </div>
@@ -87,18 +93,17 @@
 <script>
     import '../assets/css/nav-header.css'
     import '../assets/css/login.css'
+
     export default {
         name: 'NavHeader',
-        components: {
-
-        },
+        components: {},
         data() {
             return {
-                userName:'admin',
-                userPwd:'123456',
-                errorTip:false,
-                loginModalFlag:false,
-                nickName:'',
+                userName: 'admin',
+                userPwd: '123456',
+                errorTip: false,
+                loginModalFlag: false,
+                nickName: '',
             }
         },
         mounted() {
@@ -107,38 +112,38 @@
         methods: {
 
             //登录
-            login(){
-                if(!this.userName || !this.userPwd){
+            login() {
+                if (!this.userName || !this.userPwd) {
                     this.errorTip = true;
                     return
                 }
                 this.$http.POST('/users/login', {
-                    userName:this.userName,
-                    userPwd:this.userPwd,
+                    userName: this.userName,
+                    userPwd: this.userPwd,
                 }, (respData) => {
-                    if(respData.status === '0'){
+                    if (respData.status === '0') {
                         this.errorTip = false;
                         this.loginModalFlag = false;
                         this.nickName = respData.result.userName;
-                    }else{
+                    } else {
                         console.log(respData.msg)
                     }
                 })
             },
 
             //登出
-            logOut(){
+            logOut() {
                 this.$http.POST('/users/logout', {}, (respData) => {
-                    if(respData.status === '0'){
+                    if (respData.status === '0') {
                         this.nickName = '';
-                    }else{
+                    } else {
                         console.log(respData.msg)
                     }
                 })
             },
 
             //检查登录状态
-            checkLogin(){
+            checkLogin() {
                 this.$http.GET('/users/checkLogin', {}, (respData) => {
                     if(respData.status === '0'){
                         this.nickName = respData.result.userName;

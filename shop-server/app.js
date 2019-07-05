@@ -10,7 +10,7 @@ var usersRouter = require('./routes/users');
 var goodsRouter = require('./routes/goods');
 
 //连接mongoDB 数据库
-mongoose.connect('mongodb://127.0.0.1:27017/vue_shop');
+mongoose.connect('mongodb://pegasus.org.cn:27017/vue_shop');
 mongoose.connection.on('connected', () => {
     console.log('连接成功...')
 });
@@ -36,7 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //解决跨域
 app.all('*', function (req, res, next) {
     // CORS配置
-    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Origin", "http://localhost:5980");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
     res.header("Access-Control-Allow-Credentials", true);

@@ -17,7 +17,6 @@ router.post('/login', function (req, res, next) {
             })
         } else {
             if (doc) {
-                console.log('111111111111111111111111')
                 res.cookie("userId", doc.userId, {
                     path: '/',
                     maxAge: 1000 * 60 * 60
@@ -26,7 +25,6 @@ router.post('/login', function (req, res, next) {
                     path: '/',
                     maxAge: 1000 * 60 * 60
                 })
-                console.log(req.cookies)
                 res.json({
                     status: '0',
                     msg: '',
@@ -64,16 +62,16 @@ router.post('/logout', function (req, res, next) {
 // 检查登录状态
 router.get('/checkLogin', function (req, res, next) {
     console.log(req.cookies);
-    if(req.cookies.userId){
+    if (req.cookies.userId) {
         res.json({
             status: '0',
             msg: '',
             result: {
-                userId:req.cookies.userIdd,
-                userName:req.cookies.userName,
+                userId: req.cookies.userIdd,
+                userName: req.cookies.userName,
             }
         });
-    }else{
+    } else {
         res.json({
             status: '1',
             msg: '未登录',

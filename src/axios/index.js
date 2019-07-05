@@ -14,6 +14,7 @@ const axios = Axios.create({
         data = qs.stringify(data);
         return data;
     }],
+    withCredentials: true //携带cookie
 });
 
 /**
