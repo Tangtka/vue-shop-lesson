@@ -57,6 +57,27 @@
                 </div>
             </div>
         </div>
+        <Modal v-bind:mdShow="mdShow" v-on:close="closeModal">
+            <p slot="message">
+                请先登录,否则无法加入到购物车中!
+            </p>
+            <div slot="btnGroup">
+                <a class="btn btn--m" href="javascript:void(0);" @click="closeModal ">关闭</a>
+            </div>
+        </Modal>
+        <Modal :mdShow="mdShowCart" @close="closeModal">
+
+            <p slot="message">
+                <svg class="icon-status-ok">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-status-ok"></use>
+                </svg>
+                <span>加入购物车成!</span>
+            </p>
+            <div slot="btnGroup">
+                <a class="btn btn--m" href="javascript:void(0);" @click="closeModal">继续购物</a>
+                <router-link class="btn btn--m btn--red" href="javascript:;" to="/cart">查看购物车</router-link>
+            </div>
+        </Modal>
         <div class="md-overlay" v-show="overLayFlag" @click.stop="closePop()"></div>
         <NavFooter></NavFooter>
     </div>
@@ -68,11 +89,12 @@
     import NavHeader from '../components/NavHeader.vue'
     import NavBread from '../components/NavBread.vue'
     import NavFooter from '../components/NavFooter.vue'
+    import Modal from '../components/Modal.vue'
 
     export default {
         name: 'GoodsList',
         components: {
-            NavHeader, NavBread, NavFooter
+            NavHeader, NavBread, NavFooter,Modal
         },
         data() {
             return {
@@ -112,7 +134,10 @@
                 },
                 sortFlag:true, //排序
                 busy:true, //是否下一页
-                loading:false //加载
+                loading:false, //加载
+
+                mdShowCart:false, //添加购物车成功弹窗
+                mdShow:false, //添加购物车失败弹窗
 
             }
         },
@@ -123,7 +148,7 @@
             //获取商品列表
             getGoodsList() {
                 this.loading = true;
-                this.$http.GET('/goods', {
+                this.$http.GET('/goods/list', {
                     page:this.page.num,
                     pageSize:this.page.size,
                     sort:this.sortFlag?1:-1,
@@ -194,12 +219,21 @@
                     productId:productId,
                 }, (respData) => {
                     if(respData.status === '0'){
-                        console.log(respData)
+                        this.mdShowCart = true;
 
                     }else{
                         console.log(respData.msg)
+                        if(respData.status === '10001'){
+                            this.mdShow = true;
+                        }
                     }
                 })
+            },
+
+            //关闭加入购物车弹窗
+            closeModal(){
+                this.mdShowCart = false;
+                this.mdShow = false;
             },
         },
     }

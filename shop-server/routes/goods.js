@@ -5,7 +5,7 @@ var Users = require('../models/users.js');
 
 
 // 处理数据接口
-router.get('/', (req, res, next) => {
+router.get('/list', (req, res, next) => {
     let page = parseInt(req.param('page'));
     let pageSize = parseInt(req.param('pageSize'));
     let sort = parseInt(req.param('sort'));  //1升序 -1降序
@@ -84,7 +84,6 @@ router.post('/addCart', (req, res, next) => {
                 msg: err.message
             })
         } else {
-            console.log(doc);
             if (doc) {
                 //遍历购物车，是否存在商品，存在+1
                 doc.cartList.forEach((item) => {
