@@ -68,12 +68,12 @@
                                         <dd class="tel">{{item.tel}}</dd>
                                     </dl>
                                     <div class="addr-opration addr-del">
-                                        <a href="javascript:;" class="addr-del-btn">
+                                        <a href="javascript:;" class="addr-del-btn" @click="delAddressConfirm(item.addressId)">
                                             <svg class="icon icon-del"><use xlink:href="#icon-del"></use></svg>
                                         </a>
                                     </div>
                                     <div class="addr-opration addr-set-default">
-                                        <a href="javascript:;" class="addr-set-default-btn"><i>设为默认地址</i></a>
+                                        <a href="javascript:;" class="addr-set-default-btn" v-if="!item.isDefault" @click="setDefault(item.addressId)"><i>设为默认地址</i></a>
                                     </div>
                                     <div class="addr-opration addr-default" v-if="item.isDefault">默认地址</div>
                                 </li>
@@ -125,7 +125,23 @@
                 </div>
             </div>
         </div>
-
+        <Modal :mdShow="isMdShow_del" @close="closeModal">
+            <p slot="message">
+                您是否确认要删除此地址?
+            </p>
+            <div slot="btnGroup">
+                <a class="btn btn--m" href="javascript:;" @click="delAddress">确认</a>
+                <a class="btn btn--m btn--red" href="javascript:;" @click="closeModal">取消</a>
+            </div>
+        </Modal>
+        <Modal :mdShow="isMdShow_undel" @close="closeModal">
+            <p slot="message">
+                地址列表至少有一条数据，已无法继续删除。
+            </p>
+            <div slot="btnGroup">
+                <a class="btn btn--m btn--red" href="javascript:;" @click="closeModal">取消</a>
+            </div>
+        </Modal>
         <NavFooter></NavFooter>
 
     </div>
@@ -188,6 +204,43 @@
                     if (respData.status === '0') {
                         this.addressList = respData.result;
                         this.selectedAddrId = this.addressList[0].addressId
+                    } else {
+                        console.log(respData.msg)
+                    }
+                })
+            },
+
+            //设置默认地址
+            setDefault(addressId){
+                this.$http.POST('/users/setDefault', {
+                    addressId:addressId
+                },(respData) => {
+                    if (respData.status === '0') {
+                        console.log('设置成功')
+                    } else {
+                        console.log(respData.msg)
+                    }
+                })
+            },
+
+            //关闭弹窗
+            closeModal(){
+                this.isMdShow_del = false;
+                this.isMdShow_undel = false;
+            },
+
+            //删除地址
+            delAddressConfirm(addressId){
+                this.isMdShow_del = true;
+                this.addressId = addressId;
+            },
+            delAddress(){
+                this.$http.POST('/users/delAddress', {
+                    addressId:this.addressId
+                },(respData) => {
+                    if (respData.status === '0') {
+                        this.isMdShow_del = false;
+                        this.getAdressList();
                     } else {
                         console.log(respData.msg)
                     }

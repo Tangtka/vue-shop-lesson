@@ -96,7 +96,7 @@ router.get('/cartList', (req, res, next) => {
                 res.json({
                     status: '0',
                     msg: '',
-                    result:doc.cartList
+                    result: doc.cartList
                 })
             }
         }
@@ -109,10 +109,10 @@ router.post('/cartDel', (req, res, next) => {
     var productId = req.body.productId;
     Users.update({
         userId: userId
-    },{
-        $pull:{
-            'cartList':{
-                'productId':productId
+    }, {
+        $pull: {
+            'cartList': {
+                'productId': productId
             }
         }
     }, (err, doc) => {
@@ -126,7 +126,7 @@ router.post('/cartDel', (req, res, next) => {
                 res.json({
                     status: '0',
                     msg: '',
-                    result:'success'
+                    result: 'success'
                 })
             }
         }
@@ -143,10 +143,10 @@ router.post('/cartEdit', (req, res, next) => {
 
     Users.update({
         'userId': userId,
-        'cartList.productId':productId
-    },{
-        'cartList.$.productNum':productNum,
-        'cartList.$.checked':checked,
+        'cartList.productId': productId
+    }, {
+        'cartList.$.productNum': productNum,
+        'cartList.$.checked': checked,
     }, (err, doc) => {
         if (err) {
             res.json({
@@ -158,7 +158,7 @@ router.post('/cartEdit', (req, res, next) => {
                 res.json({
                     status: '0',
                     msg: '',
-                    result:'success'
+                    result: 'success'
                 })
             }
         }
@@ -173,7 +173,7 @@ router.post('/editCheckAll', (req, res, next) => {
 
     Users.findOne({
         'userId': userId,
-    },(err, doc) => {
+    }, (err, doc) => {
         if (err) {
             res.json({
                 status: '1',
@@ -182,10 +182,10 @@ router.post('/editCheckAll', (req, res, next) => {
         } else {
             if (doc) {
                 console.log(checkAll);
-                doc.cartList.forEach((item)=>{
-                    item.checked =  checkAll
+                doc.cartList.forEach((item) => {
+                    item.checked = checkAll
                 });
-                doc.save((err1, doc1)=>{
+                doc.save((err1, doc1) => {
                     if (err1) {
                         res.json({
                             status: '1',
@@ -196,7 +196,7 @@ router.post('/editCheckAll', (req, res, next) => {
                             res.json({
                                 status: '0',
                                 msg: '',
-                                result:'success'
+                                result: 'success'
                             })
                         }
                     }
@@ -221,11 +221,98 @@ router.get('/addressList', (req, res, next) => {
                 res.json({
                     status: '0',
                     msg: '',
-                    result:doc.addressList
+                    result: doc.addressList
                 })
             }
         }
     })
+});
+
+//设置默认地址接口
+router.post('/setDefault', (req, res, next) => {
+    var userId = req.cookies.userId;
+    var addressId = req.body.addressId;
+
+    if (!addressId) {
+        res.json({
+            status: '10002',
+            msg: 'addressId is null'
+        })
+    } else {
+        Users.findOne({userId: userId}, (err, doc) => {
+            if (err) {
+                res.json({
+                    status: '1',
+                    msg: err.message
+                })
+            } else {
+                if (doc) {
+                    doc.addressList.forEach((item) => {
+                        if (item.addressId === addressId) {
+                            item.isDefault = true
+                        } else {
+                            item.isDefault = false
+                        }
+                    });
+
+                    doc.save((err1, doc1) => {
+                        if (err1) {
+                            res.json({
+                                status: '1',
+                                msg: err1.message
+                            })
+                        } else {
+                            if (doc1) {
+                                res.json({
+                                    status: '0',
+                                    msg: '',
+                                    result: 'success'
+                                })
+                            }
+                        }
+                    });
+                }
+            }
+        })
+    }
+});
+
+//删除地址接口
+router.post('/delAddress', (req, res, next) => {
+    var userId = req.cookies.userId;
+    var addressId = req.body.addressId;
+
+    if (!addressId) {
+        res.json({
+            status: '10002',
+            msg: 'addressId is null'
+        })
+    } else {
+        Users.update({
+            userId: userId
+        }, {
+            $pull: {
+                'addressList': {
+                    'addressId': addressId
+                }
+            }
+        }, (err, doc) => {
+            if (err) {
+                res.json({
+                    status: '1',
+                    msg: err.message
+                })
+            } else {
+                if (doc) {
+                    res.json({
+                        status: '0',
+                        msg: '',
+                        result: 'success'
+                    })
+                }
+            }
+        })
+    }
 });
 
 module.exports = router;
