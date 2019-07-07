@@ -1,7 +1,9 @@
 <template>
     <div id="GoodsList">
         <NavHeader></NavHeader>
-        <NavBread></NavBread>
+        <NavBread>
+            <span>商品列表</span>
+        </NavBread>
 
         <div class="accessory-result-page">
             <div class="container">

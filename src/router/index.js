@@ -26,6 +26,13 @@ export default new Router({
             path: '/',
             name: 'GoodsList',
             component: () => import('./../views/GoodsList.vue'),
+        },
+
+        //购物车页面
+        {
+            path: '/cart',
+            name: 'Cart',
+            component: () => import('./../views/Cart.vue'),
         }
 
     ]
