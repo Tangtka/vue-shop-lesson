@@ -229,4 +229,45 @@ router.post('/cartEdit', (req, res, next) => {
     })
 });
 
+//购物车全选
+router.post('/editCheckAll', (req, res, next) => {
+    var userId = req.cookies.userId;
+    var checkAll = req.body.checkAll;
+
+
+    Users.findOne({
+        'userId': userId,
+    },(err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message
+            })
+        } else {
+            if (doc) {
+                console.log(checkAll);
+                doc.cartList.forEach((item)=>{
+                   item.checked =  checkAll
+                });
+                doc.save((err1, doc1)=>{
+                    if (err1) {
+                        res.json({
+                            status: '1',
+                            msg: err1.message
+                        })
+                    } else {
+                        if (doc1) {
+                            res.json({
+                                status: '0',
+                                msg: '',
+                                result:'success'
+                            })
+                        }
+                    }
+                });
+            }
+        }
+    })
+});
+
 module.exports = router;

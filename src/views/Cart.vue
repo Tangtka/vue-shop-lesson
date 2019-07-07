@@ -111,7 +111,7 @@
                         <div class="cart-foot-l">
                             <div class="item-all-check">
                                 <a href="javascipt:;">
-                                   <span class="checkbox-btn item-check-btn">
+                                   <span class="checkbox-btn item-check-btn" :class="{'check':checkAllFlag}" @click="toggleCheckAll">
                                       <svg class="icon icon-ok"><use xlink:href="#icon-ok"/></svg>
                                    </span>
                                     <span>全选</span>
@@ -177,6 +177,14 @@
                 });
                 return money;
             },
+            //是否全选
+            checkAllFlag(){
+                let i = 0;
+                this.cartList.forEach((item)=>{
+                    if(item.checked==='1')i++;
+                });
+                return i === this.cartList.length;
+            },
         },
         methods: {
             //获取购物车列表
@@ -235,6 +243,26 @@
                         console.log(respData.msg)
                     }
                 })
+            },
+
+            //全选
+            toggleCheckAll(){
+                let flag = !this.checkAllFlag;
+
+                this.cartList.forEach((item)=>{
+                    item.checked= flag ? '1':'0'
+                });
+
+                this.$http.POST('/goods/editCheckAll', {
+                    checkAll: flag ? '1':'0'
+                }, (respData) => {
+                    if (respData.status === '0') {
+                        this.getCartList();
+                    } else {
+                        console.log(respData.msg)
+                    }
+                })
+
             },
 
 
