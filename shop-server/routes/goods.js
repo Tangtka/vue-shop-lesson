@@ -197,4 +197,36 @@ router.post('/cartDel', (req, res, next) => {
     })
 });
 
+//修改商品数量
+router.post('/cartEdit', (req, res, next) => {
+    var userId = req.cookies.userId;
+    var productId = req.body.productId;
+    var productNum = req.body.productNum;
+    var checked = req.body.checked;
+
+
+    Users.update({
+        'userId': userId,
+        'cartList.productId':productId
+    },{
+        'cartList.$.productNum':productNum,
+        'cartList.$.checked':checked,
+    }, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message
+            })
+        } else {
+            if (doc) {
+                res.json({
+                    status: '0',
+                    msg: '',
+                    result:'success'
+                })
+            }
+        }
+    })
+});
+
 module.exports = router;

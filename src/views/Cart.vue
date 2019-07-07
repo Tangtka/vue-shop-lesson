@@ -63,7 +63,7 @@
                                 <div class="cart-tab-1">
                                     <div class="cart-item-check">
                                         <a href="javascipt:;" class="checkbox-btn item-check-btn"
-                                           :class="{'checked':item.checked === '1'}">
+                                           :class="{'checked':item.checked === '1'}" @click="editCart('checked',item)">
                                             <svg class="icon icon-ok">
                                                 <use xlink:href="#icon-ok"></use>
                                             </svg>
@@ -83,9 +83,9 @@
                                     <div class="item-quantity">
                                         <div class="select-self select-self-open">
                                             <div class="select-self-area">
-                                                <a class="input-sub">-</a>
+                                                <a class="input-sub" @click="editCart('minu',item)">-</a>
                                                 <span class="select-ipt">{{item.productNum}}</span>
-                                                <a class="input-add">+</a>
+                                                <a class="input-add" @click="editCart('add',item)">+</a>
                                             </div>
                                         </div>
                                     </div>
@@ -193,7 +193,6 @@
 
             //删除购物车
             delCart(){
-                console.log(this.delItem);
                 this.$http.POST('/goods/cartDel', {
                     productId:this.delItem.productId
                 }, (respData) => {
@@ -213,6 +212,29 @@
             //关闭加入购物车弹窗
             closeModal(){
                 this.modalConfirm = false;
+            },
+
+            //修改购物车
+            editCart(flag,item){
+                if(flag === 'add'){
+                    item.productNum++;
+                }else if(flag === 'minu'){
+                    if(item.productNum <= 1)return;
+                    item.productNum--;
+                }else if(flag === 'checked'){
+                    item.checked = item.checked === '1'? '0':'1';
+                }
+                this.$http.POST('/goods/cartEdit', {
+                    productId:item.productId,
+                    productNum:item.productNum,
+                    checked:item.checked,
+                }, (respData) => {
+                    if (respData.status === '0') {
+                        this.getCartList();
+                    } else {
+                        console.log(respData.msg)
+                    }
+                })
             },
 
 
