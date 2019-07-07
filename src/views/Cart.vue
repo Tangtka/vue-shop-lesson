@@ -123,7 +123,7 @@
                                 总价: <span class="total-price">{{totalPrice | currency}}</span>
                             </div>
                             <div class="btn-wrap">
-                                <a class="btn btn--red">去结算</a>
+                                <a class="btn btn--red" @click="checkOut">去结算</a>
                             </div>
                         </div>
                     </div>
@@ -194,7 +194,7 @@
         methods: {
             //获取购物车列表
             getCartList() {
-                this.$http.GET('/goods/cartList', {}, (respData) => {
+                this.$http.GET('/users/cartList', {}, (respData) => {
                     if (respData.status === '0') {
                         this.cartList = respData.result;
 
@@ -206,7 +206,7 @@
 
             //删除购物车
             delCart(){
-                this.$http.POST('/goods/cartDel', {
+                this.$http.POST('/users/cartDel', {
                     productId:this.delItem.productId
                 }, (respData) => {
                     if (respData.status === '0') {
@@ -237,7 +237,7 @@
                 }else if(flag === 'checked'){
                     item.checked = item.checked === '1'? '0':'1';
                 }
-                this.$http.POST('/goods/cartEdit', {
+                this.$http.POST('/users/cartEdit', {
                     productId:item.productId,
                     productNum:item.productNum,
                     checked:item.checked,
@@ -258,7 +258,7 @@
                     item.checked= flag ? '1':'0'
                 });
 
-                this.$http.POST('/goods/editCheckAll', {
+                this.$http.POST('/users/editCheckAll', {
                     checkAll: flag ? '1':'0'
                 }, (respData) => {
                     if (respData.status === '0') {
@@ -268,6 +268,21 @@
                     }
                 })
 
+            },
+
+            //跳转收货地址
+            checkOut(){
+                let i = 0;
+                this.cartList.forEach((item)=>{
+                    if(item.checked === '1'){
+                        i++;
+                    }
+                });
+                if(i >= 1){
+                    this.$router.push({
+                        path:'/address'
+                    })
+                }
             },
 
 

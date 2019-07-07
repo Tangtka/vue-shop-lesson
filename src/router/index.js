@@ -33,6 +33,13 @@ export default new Router({
             path: '/cart',
             name: 'Cart',
             component: () => import('./../views/Cart.vue'),
+        },
+
+        //收货地址
+        {
+            path: '/address',
+            name: 'Address',
+            component: () => import('./../views/Address.vue'),
         }
 
     ]
