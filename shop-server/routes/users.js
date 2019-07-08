@@ -385,4 +385,34 @@ router.post('/payMent', (req, res, next) => {
 
 });
 
+
+//订单查询
+router.post('/orderDetail', (req, res, next) => {
+    var userId = req.cookies.userId;
+    var orderId = req.body.orderId;
+
+    Users.findOne({userId: userId}, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message
+            })
+        } else {
+            //获取订单信息
+            doc.orderList.filter((item)=>{
+                if(item.orderId === orderId){
+                    res.json({
+                        status: '0',
+                        msg: '',
+                        result:{
+                            orderId:item.orderId,
+                            orderTotal:item.orderTotal
+                        }
+                    })
+                }
+            });
+        }
+    })
+
+});
 module.exports = router;

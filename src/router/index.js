@@ -47,6 +47,13 @@ export default new Router({
             path: '/orderConfirm',
             name: 'OrderConfirm',
             component: () => import('./../views/OrderConfirm.vue'),
+        },
+
+        //订单确提交
+        {
+            path: '/orderSuccess',
+            name: 'OrderSuccess',
+            component: () => import('./../views/OrderSuccess.vue'),
         }
 
     ]
