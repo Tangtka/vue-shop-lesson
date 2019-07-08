@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Users = require('../models/users.js');
+require('../util/date_format.js');
 
 // 登录
 router.post('/login', function (req, res, next) {
@@ -313,6 +314,75 @@ router.post('/delAddress', (req, res, next) => {
             }
         })
     }
+});
+
+//付款结算功能的实现
+router.post('/payMent', (req, res, next) => {
+    var userId = req.cookies.userId;
+    var addressId = req.body.addressId;
+    var orderTotal = req.body.orderTotal;
+
+    Users.findOne({userId: userId}, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message
+            })
+        } else {
+            var address = '';
+            var goodsList = [];
+
+            //获取用户当前地址
+            doc.addressList.forEach((item)=>{
+                if(addressId === item.addressId){
+                    address = item;
+                }
+            });
+
+            //获取用户当前地址
+            doc.cartList.filter((item)=>{
+                if(item.checked === '1'){
+                    goodsList.push(item);
+                }
+            });
+
+            var platform = '598';
+            var r1 = Math.floor(Math.random()*10);
+            var r2 = Math.floor(Math.random()*10);
+            var sysDate = new Date().Format('yyyyMMddhhmmss');
+            var createDate = new Date().Format('yyyy-MM-dd hh:mm:ss');
+            var orderId = platform + r1 + sysDate +r2;
+
+            var order = {
+                orderId:orderId,
+                orderTotal:orderTotal,
+                addresInfo:address,
+                goodsList:goodsList,
+                orderStatus:'1',
+                createDate:createDate,
+            };
+
+            doc.orderList.push(order);
+
+            doc.save((err1, doc1) => {
+                if (err1) {
+                    res.json({
+                        status: '1',
+                        msg: err1.message
+                    })
+                } else {
+                    if (doc1) {
+                        res.json({
+                            status: '0',
+                            msg: '',
+                            result:order.orderId
+                        })
+                    }
+                }
+            });
+        }
+    })
+
 });
 
 module.exports = router;

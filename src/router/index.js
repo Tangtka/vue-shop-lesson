@@ -40,6 +40,13 @@ export default new Router({
             path: '/address',
             name: 'Address',
             component: () => import('./../views/Address.vue'),
+        },
+
+        //订单确认页
+        {
+            path: '/orderConfirm',
+            name: 'OrderConfirm',
+            component: () => import('./../views/OrderConfirm.vue'),
         }
 
     ]

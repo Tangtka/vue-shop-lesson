@@ -120,7 +120,7 @@
                         </div>
                     </div>
                     <div class="next-btn-wrap">
-                        <a class="btn btn--m btn--red">去结算</a>
+                        <a class="btn btn--m btn--red" @click="$router.push({path:'/orderConfirm',query:{'addressId':selectedAddrId}})">去结算</a>
                     </div>
                 </div>
             </div>
@@ -216,7 +216,7 @@
                     addressId:addressId
                 },(respData) => {
                     if (respData.status === '0') {
-                        console.log('设置成功')
+                        this.getAdressList();
                     } else {
                         console.log(respData.msg)
                     }
@@ -231,6 +231,10 @@
 
             //删除地址
             delAddressConfirm(addressId){
+                if(this.addressList.length === 1){
+                    this.isMdShow_undel = true;
+                    return
+                }
                 this.isMdShow_del = true;
                 this.addressId = addressId;
             },
