@@ -3,7 +3,7 @@ import Router from 'vue-router'
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
     mode: 'history',
     base: process.env.BASE_URL,
     scrollBehavior(to, from, savedPosition) {
@@ -21,9 +21,13 @@ export default new Router({
         }
     },
     routes: [
-        //商品列表
         {
             path: '/',
+            redirect: '/goods'
+        },
+        //商品列表
+        {
+            path: '/goods',
             name: 'GoodsList',
             component: () => import('./../views/GoodsList.vue'),
         },
@@ -57,4 +61,23 @@ export default new Router({
         }
 
     ]
-})
+});
+
+// 判断是否需要登录权限以及是否登录
+router.beforeEach((to, from, next) => {
+    Vue.prototype.$http.GET('/users/checkLogin', {}, (respData) => {
+        
+        if(respData.status === '0'){
+            next();
+        } else {
+            if(to.fullPath === '/goods'){
+                next()
+            } else {
+                next({path: '/goods'})
+            }
+        }
+    })
+});
+
+
+export default router;

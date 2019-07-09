@@ -143,7 +143,9 @@
                 this.$http.POST('/users/logout', {}, (respData) => {
                     if (respData.status === '0') {
                         // this.nickName = '';
-                        this.$store.commit('updateUserInf','')
+                        this.$store.commit('updateUserInf','');
+                        this.$store.commit('clearCartCount',0);
+                        this.$router.push('/')
                     } else {
                         console.log(respData.msg)
                     }
