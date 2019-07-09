@@ -94,6 +94,8 @@
     import '../assets/css/nav-header.css'
     import '../assets/css/login.css'
 
+    import {mapState} from 'vuex'
+
     export default {
         name: 'NavHeader',
         components: {},
@@ -103,11 +105,14 @@
                 userPwd: '123456',
                 errorTip: false,
                 loginModalFlag: false,
-                nickName: '',
+                // nickName: '',
             }
         },
         mounted() {
             this.checkLogin();
+        },
+        computed:{
+            ...mapState(['nickName'])
         },
         methods: {
 
@@ -124,7 +129,8 @@
                     if (respData.status === '0') {
                         this.errorTip = false;
                         this.loginModalFlag = false;
-                        this.nickName = respData.result.userName;
+                        // this.nickName = respData.result.userName;
+                        this.$store.commit('updateUserInf',respData.result.userName)
                     } else {
                         console.log(respData.msg)
                     }
@@ -135,7 +141,8 @@
             logOut() {
                 this.$http.POST('/users/logout', {}, (respData) => {
                     if (respData.status === '0') {
-                        this.nickName = '';
+                        // this.nickName = '';
+                        this.$store.commit('updateUserInf','')
                     } else {
                         console.log(respData.msg)
                     }
@@ -146,7 +153,8 @@
             checkLogin() {
                 this.$http.GET('/users/checkLogin', {}, (respData) => {
                     if(respData.status === '0'){
-                        this.nickName = respData.result.userName;
+                        // this.nickName = respData.result.userName;
+                        this.$store.commit('updateUserInf',respData.result.userName)
                         this.loginModalFlag = false;
                     }else{
                         console.log(respData.msg)
