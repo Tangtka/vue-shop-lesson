@@ -211,6 +211,8 @@
                 }, (respData) => {
                     if (respData.status === '0') {
                         this.modalConfirm = false;
+                        let delCount = this.delItem.productNum;
+                        this.$store.commit('updateCartCount',-delCount);
                         this.getCartList();
                     } else {
                         console.log(respData.msg)
@@ -243,6 +245,7 @@
                     checked:item.checked,
                 }, (respData) => {
                     if (respData.status === '0') {
+                        this.$store.commit('updateCartCount',flag === 'add'? 1:flag === 'minu'? -1:0);
                         this.getCartList();
                     } else {
                         console.log(respData.msg)

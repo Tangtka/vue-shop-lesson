@@ -38,7 +38,7 @@
                            @click="loginModalFlag = true">登录</a>
                         <a href="javascript:void(0)" class="navbar-link" v-if="nickName" @click="logOut()">登出</a>
                         <div class="navbar-cart-container">
-                            <span class="navbar-cart-count"></span>
+                            <span class="navbar-cart-count">{{cartCount}}</span>
                             <a class="navbar-link" href="/cart">
                                 <svg class="navbar-cart-logo">
                                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
@@ -112,7 +112,7 @@
             this.checkLogin();
         },
         computed:{
-            ...mapState(['nickName'])
+            ...mapState(['nickName','cartCount'])
         },
         methods: {
 
@@ -131,6 +131,7 @@
                         this.loginModalFlag = false;
                         // this.nickName = respData.result.userName;
                         this.$store.commit('updateUserInf',respData.result.userName)
+                        this.getCartCount();
                     } else {
                         console.log(respData.msg)
                     }
@@ -154,8 +155,20 @@
                 this.$http.GET('/users/checkLogin', {}, (respData) => {
                     if(respData.status === '0'){
                         // this.nickName = respData.result.userName;
-                        this.$store.commit('updateUserInf',respData.result.userName)
+                        this.$store.commit('updateUserInf',respData.result.userName);
                         this.loginModalFlag = false;
+                        this.getCartCount();
+                    }else{
+                        console.log(respData.msg)
+                    }
+                })
+            },
+
+            //获取购物车商品数量
+            getCartCount(){
+                this.$http.GET('/users/getCartCount', {}, (respData) => {
+                    if(respData.status === '0'){
+                        this.$store.commit('updateCartCount',respData.result);
                     }else{
                         console.log(respData.msg)
                     }

@@ -229,7 +229,7 @@
                 }, (respData) => {
                     if(respData.status === '0'){
                         this.mdShowCart = true;
-
+                        this.$store.commit('updateCartCount',1);
                     }else{
                         console.log(respData.msg)
                         if(respData.status === '10001'){
