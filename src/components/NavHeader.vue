@@ -34,8 +34,8 @@
                         <!--<a href="/" class="navbar-link">我的账户</a>-->
                         <span class="navbar-link"></span>
                         <span class="navbar-link" v-if="nickName">{{nickName}}</span>
-                        <a href="javascript:void(0)" class="navbar-link" v-if="!nickName"
-                           @click="loginModalFlag = true">登录</a>
+                        <a href="javascript:void(0)" class="navbar-link" v-if="!nickName" @click="registerModalFlag = true">注册</a>
+                        <a href="javascript:void(0)" class="navbar-link" v-if="!nickName" @click="loginModalFlag = true">登录</a>
                         <a href="javascript:void(0)" class="navbar-link" v-if="nickName" @click="logOut()">登出</a>
                         <div class="navbar-cart-container">
                             <span class="navbar-cart-count">{{cartCount}}</span>
@@ -83,8 +83,44 @@
                     </div>
                 </div>
             </div>
+
+            <!-- 用户注册页弹层 -->
+            <div class="md-modal modal-msg md-modal-transition" v-bind:class="{'md-show':registerModalFlag}">
+                <div class="md-modal-inner">
+                    <div class="md-top">
+                        <div class="md-title">注册</div>
+                        <button class="md-close" @click="registerModalFlag=false">Close</button>
+                    </div>
+
+                    <div class="md-content">
+                        <div class="confirm-tips">
+                            <div class="error-wrap">
+                                <span class="error error-show" v-show="errorTip">{{errorTipText}}</span>
+                            </div>
+                            <ul>
+                                <li class="regi_form_input">
+                                    <i class="icon IconPeople"></i>
+                                    <input type="text" tabindex="1" name="loginname" v-model="registerName"
+                                           class="regi_login_input regi_login_input_left" placeholder="用户名"
+                                           data-type="loginname">
+                                </li>
+                                <li class="regi_form_input noMargin">
+                                    <i class="icon IconPwd"></i>
+                                    <input type="password" tabindex="2" name="password" v-model="registerPwd"
+                                           class="regi_login_input regi_login_input_left login-input-no input_text"
+                                           placeholder="密码" @keyup.enter="register">
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="login-wrap">
+                            <a href="javascript:void(0);" class="btn-login" @click="register">注 册</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- 遮罩层 -->
-            <div class="md-overlay" v-if="loginModalFlag" @click="loginModalFlag = false"></div>
+            <div class="md-overlay" v-if="loginModalFlag || registerModalFlag" @click="loginModalFlag = false"></div>
 
         </header>
     </div>
@@ -101,10 +137,14 @@
         components: {},
         data() {
             return {
-                userName: 'admin',
-                userPwd: '123456',
+                userName: '',
+                registerName: '',
+                userPwd: '',
+                registerPwd: '',
                 errorTip: false,
                 loginModalFlag: false,
+                registerModalFlag: false,
+                errorTipText:''
                 // nickName: '',
             }
         },
@@ -115,6 +155,30 @@
             ...mapState(['nickName','cartCount'])
         },
         methods: {
+
+            //注册
+            register() {
+                if (!this.registerName || !this.registerPwd) {
+                    this.errorTip = true;
+                    this.errorTipText = '用户名或者密码不能为空';
+                    return
+                }
+                this.$http.POST('/users/register', {
+                    userName: this.registerName,
+                    userPwd: this.registerPwd,
+                }, (respData) => {
+                    if (respData.status === '0') {
+                        this.errorTip = false;
+                        this.registerModalFlag = false;
+                        this.$store.commit('updateUserInf',respData.result.userName);
+                        this.getCartCount();
+                    } else {
+                        console.log(respData.msg);
+                        this.errorTipText = respData.msg;
+                        this.errorTip = true;
+                    }
+                })
+            },
 
             //登录
             login() {

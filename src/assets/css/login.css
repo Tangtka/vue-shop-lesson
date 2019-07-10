@@ -16,11 +16,12 @@
     height: 29px;
     margin: 6px 0 0 14px;
     background-position: 4px 5px;
-    background-image: url("/static/icon.png");
+    background-image: url("../../assets/img/ok-2.png");
     background-repeat: no-repeat;
+    background-size: 75%;
 }
 .regi_form_input .IconPwd {
-    background-position: -198px 3px;
+    /*background-position: -198px 3px;*/
 }
 .regi_form_input .regi_login_input{
     position: absolute;
@@ -72,7 +73,7 @@
     line-height: 16px;
     height: 16px;
     text-align: left;
-    background: url("/static/icon.png") 0 -100px no-repeat;
+    background: url("../../assets/img/icon.png") 0 -100px no-repeat;
 }
 .md-content .error-wrap .error-show{
     visibility: visible;

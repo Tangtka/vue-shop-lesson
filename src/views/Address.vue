@@ -78,7 +78,7 @@
                                     <div class="addr-opration addr-default" v-if="item.isDefault">默认地址</div>
                                 </li>
                                 <li class="addr-new">
-                                    <div class="add-new-inner">
+                                    <div class="add-new-inner" @click="addtrssModalFlag = true">
                                         <i class="icon-add">
                                             <svg class="icon icon-add"><use xlink:href="#icon-add"></use></svg>
                                         </i>
@@ -120,7 +120,7 @@
                         </div>
                     </div>
                     <div class="next-btn-wrap">
-                        <a class="btn btn--m btn--red" @click="$router.push({path:'/orderConfirm',query:{'addressId':selectedAddrId}})">去结算</a>
+                        <a class="btn btn--m btn--red" @click="onConfirm">去结算</a>
                     </div>
                 </div>
             </div>
@@ -142,6 +142,58 @@
                 <a class="btn btn--m btn--red" href="javascript:;" @click="closeModal">取消</a>
             </div>
         </Modal>
+        <Modal :mdShow="isMdShow_addrId" @close="closeModal">
+            <p slot="message">
+                至少选择一个地址
+            </p>
+            <div slot="btnGroup">
+                <a class="btn btn--m btn--red" href="javascript:;" @click="closeModal">取消</a>
+            </div>
+        </Modal>
+
+        <!-- 增加地址页弹层 -->
+        <div class="md-modal modal-msg md-modal-transition" v-bind:class="{'md-show':addtrssModalFlag}">
+            <div class="md-modal-inner">
+                <div class="md-top">
+                    <div class="md-title">新增收货地址</div>
+                    <button class="md-close" @click="addtrssModalFlag=false">Close</button>
+                </div>
+
+                <div class="md-content">
+                    <div class="confirm-tips">
+                        <div class="error-wrap">
+                            <span class="error error-show" v-show="errorTip">{{errorTipText}}</span>
+                        </div>
+                        <ul>
+                            <li class="regi_form_input">
+                                <i class="icon IconPeople"></i>
+                                <input type="text" tabindex="1" name="loginname" v-model="streetName"
+                                       class="regi_login_input regi_login_input_left" placeholder="地址"
+                                       data-type="loginname">
+                            </li>
+                            <li class="regi_form_input noMargin">
+                                <i class="icon IconPwd"></i>
+                                <input type="text" tabindex="2" name="password" v-model="postCode"
+                                       class="regi_login_input regi_login_input_left login-input-no input_text"
+                                       placeholder="邮编" >
+                            </li>
+                            <li class="regi_form_input noMargin">
+                                <i class="icon IconPwd"></i>
+                                <input type="text" tabindex="2" name="password" v-model="tel"
+                                       class="regi_login_input regi_login_input_left login-input-no input_text"
+                                       placeholder="电话" @keyup.enter="addaddress">
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="login-wrap">
+                        <a href="javascript:void(0);" class="btn-login" @click="addaddress">提交</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 遮罩层 -->
+        <div class="md-overlay" v-if="addtrssModalFlag" @click="addtrssModalFlag = false"></div>
         <NavFooter></NavFooter>
 
     </div>
@@ -170,7 +222,15 @@
                 selectedAddrId:'',
                 isMdShow_del:false,
                 isMdShow_undel:false,
-                addressId:''
+                addressId:'',
+                isMdShow_addrId:false,
+                addtrssModalFlag:false,
+                errorTip:false,
+                errorTipText:'',
+                streetName:'',
+                postCode:'',
+                tel:'',
+
             }
         },
         mounted() {
@@ -183,6 +243,39 @@
             },
         },
         methods: {
+            // 添加地址
+            addaddress(){
+                if (!this.streetName || !this.tel) {
+                    this.errorTip = true;
+                    this.errorTipText = '地址或电话不能为空';
+                    return
+                }
+                this.$http.POST('/users/addAddress', {
+                    streetName: this.streetName,
+                    tel: this.tel,
+                    postCode: this.postCode,
+                }, (respData) => {
+                    if (respData.status === '0') {
+                        this.errorTip = false;
+                        this.addtrssModalFlag = false;
+                    } else {
+                        console.log(respData.msg);
+                        this.errorTipText = respData.msg;
+                        this.errorTip = true;
+                    }
+                })
+            },
+
+            //前往结算
+            onConfirm(){
+                if(this.selectedAddrId === ''){
+                    this.isMdShow_addrId = true;
+                    return
+                }
+                this.$router.push({path:'/orderConfirm',query:{'addressId':this.selectedAddrId}})
+
+            },
+
             // 选中地址
             onCheck(index,item){
                 this.checkIndex=index;
@@ -227,6 +320,7 @@
             closeModal(){
                 this.isMdShow_del = false;
                 this.isMdShow_undel = false;
+                this.isMdShow_addrId = false;
             },
 
             //删除地址

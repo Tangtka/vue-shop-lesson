@@ -53,6 +53,7 @@ app.use((req, res, next) => {
     } else {
         if (req.originalUrl == '/users/login' ||
             req.originalUrl == '/users/logout' ||
+            req.originalUrl == '/users/register' ||
             req.originalUrl.indexOf('/goods/list') > -1 ||
             req.originalUrl == '/users/checkLogin') {
             next();

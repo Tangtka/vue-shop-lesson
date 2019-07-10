@@ -39,6 +39,64 @@ router.post('/login', function (req, res, next) {
         }
     })
 });
+// 注册
+router.post('/register', function (req, res, next) {
+
+    var params = {
+        userName: req.body.userName,
+        userPwd: req.body.userPwd,
+    };
+    Users.findOne(params, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message
+            })
+        } else {
+            if (doc) {
+                res.json({
+                    status: '1',
+                    msg: '已存在该用户'
+                })
+            }else{
+                let userId = '598'+new Date().getTime();
+                Users.create({
+                    "userId":userId,
+                    "userName":params.userName,
+                    "userPwd":params.userPwd,
+                    "orderList":[],
+                    "cartList":[],
+                    "addressList":[]
+                }, function (err1, doc1) {
+                    if (err1) {
+                        res.json({
+                            status: '1',
+                            msg: err1.message
+                        })
+                    } else {
+                        res.cookie("userId", userId, {
+                            path: '/',
+                            maxAge: 1000 * 60 * 60
+                        });
+                        res.cookie("userName", params.userName, {
+                            path: '/',
+                            maxAge: 1000 * 60 * 60
+                        });
+                        res.json({
+                            status: '0',
+                            msg: '',
+                            result: {
+                                userId: userId,
+                                userName: params.userName
+                            }
+                        })
+                    }
+                })
+            }
+
+        }
+    })
+});
 
 // 登出
 router.post('/logout', function (req, res, next) {
@@ -62,7 +120,6 @@ router.post('/logout', function (req, res, next) {
 
 // 检查登录状态
 router.get('/checkLogin', function (req, res, next) {
-    console.log(req.cookies);
     if (req.cookies.userId) {
         res.json({
             status: '0',
@@ -225,6 +282,58 @@ router.get('/addressList', (req, res, next) => {
                     result: doc.addressList
                 })
             }
+        }
+    })
+});
+// 新增地址
+router.post('/addAddress', function (req, res, next) {
+
+    var params = {
+        streetName: req.body.streetName,
+        tel: req.body.tel,
+        postCode: req.body.postCode,
+        userId:req.cookies.userId
+    };
+    Users.findOne({userId:params.userId}, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message
+            })
+        } else {
+
+            if (doc) {
+                let addressId = '875'+ new Date().getTime();
+                doc.addressList.push({
+                    "addressId": addressId,
+                    "userName": req.cookies.userName,
+                    "streetName": params.streetName,
+                    "postCode": params.postCode,
+                    "tel": params.tel,
+                    "isDefault": false
+                });
+                doc.save((err1,doc1)=>{
+                    if(err1){
+                        res.json({
+                            status: '1',
+                            msg: err1.message
+                        })
+                    }else{
+                        res.json({
+                            status: '0',
+                            msg: '',
+                            result: 'success'
+                        })
+                    }
+                })
+            }else{
+                res.json({
+                    status: '1',
+                    msg: '不存在改用户'
+                })
+
+            }
+
         }
     })
 });
@@ -419,7 +528,6 @@ router.post('/orderDetail', (req, res, next) => {
 /* 获取购车商品数量 */
 router.get("/getCartCount", function (req,res,next) {
     if(req.cookies && req.cookies.userId){
-        console.log("userId:"+req.cookies.userId);
         var userId = req.cookies.userId;
         Users.findOne({"userId":userId}, function (err,doc) {
             if(err){
