@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 Vue.use(Router);
-
 const router = new Router({
     mode: 'history',
     base: process.env.BASE_URL,
@@ -65,7 +64,7 @@ const router = new Router({
 
 // 判断是否需要登录权限以及是否登录
 router.beforeEach((to, from, next) => {
-    Vue.prototype.$http.GET('/users/checkLogin', {}, (respData) => {
+    Vue.prototype.$http.GET('/api/users/checkLogin', {}, (respData) => {
         
         if(respData.status === '0'){
             next();
@@ -73,7 +72,7 @@ router.beforeEach((to, from, next) => {
             if(to.fullPath === '/goods'){
                 next()
             } else {
-                next({path: '/goods'})
+                next({path: '/'})
             }
         }
     })

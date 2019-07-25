@@ -194,7 +194,7 @@
         methods: {
             //获取购物车列表
             getCartList() {
-                this.$http.GET('/users/cartList', {}, (respData) => {
+                this.$http.GET('/api/users/cartList', {}, (respData) => {
                     if (respData.status === '0') {
                         this.cartList = respData.result;
 
@@ -206,7 +206,7 @@
 
             //删除购物车
             delCart(){
-                this.$http.POST('/users/cartDel', {
+                this.$http.POST('/api/users/cartDel', {
                     productId:this.delItem.productId
                 }, (respData) => {
                     if (respData.status === '0') {
@@ -239,7 +239,7 @@
                 }else if(flag === 'checked'){
                     item.checked = item.checked === '1'? '0':'1';
                 }
-                this.$http.POST('/users/cartEdit', {
+                this.$http.POST('/api/users/cartEdit', {
                     productId:item.productId,
                     productNum:item.productNum,
                     checked:item.checked,
@@ -261,7 +261,7 @@
                     item.checked= flag ? '1':'0'
                 });
 
-                this.$http.POST('/users/editCheckAll', {
+                this.$http.POST('/api/users/editCheckAll', {
                     checkAll: flag ? '1':'0'
                 }, (respData) => {
                     if (respData.status === '0') {

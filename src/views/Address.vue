@@ -250,7 +250,7 @@
                     this.errorTipText = '地址或电话不能为空';
                     return
                 }
-                this.$http.POST('/users/addAddress', {
+                this.$http.POST('/api/users/addAddress', {
                     streetName: this.streetName,
                     tel: this.tel,
                     postCode: this.postCode,
@@ -293,7 +293,7 @@
 
             //获取收货地址
             getAdressList(){
-                this.$http.GET('/users/addressList', {},(respData) => {
+                this.$http.GET('/api/users/addressList', {},(respData) => {
                     if (respData.status === '0') {
                         this.addressList = respData.result;
                         this.selectedAddrId = this.addressList[0].addressId
@@ -305,7 +305,7 @@
 
             //设置默认地址
             setDefault(addressId){
-                this.$http.POST('/users/setDefault', {
+                this.$http.POST('/api/users/setDefault', {
                     addressId:addressId
                 },(respData) => {
                     if (respData.status === '0') {
@@ -333,7 +333,7 @@
                 this.addressId = addressId;
             },
             delAddress(){
-                this.$http.POST('/users/delAddress', {
+                this.$http.POST('/api/users/delAddress', {
                     addressId:this.addressId
                 },(respData) => {
                     if (respData.status === '0') {

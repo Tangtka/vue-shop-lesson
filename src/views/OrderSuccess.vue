@@ -75,7 +75,7 @@
             getOrderDetail(){
                 var orderId = this.$route.query.orderId;
 
-                this.$http.POST('/users/orderDetail', {
+                this.$http.POST('/api/users/orderDetail', {
                     orderId:this.orderId
                 }, (respData) => {
                     if (respData.status === '0') {

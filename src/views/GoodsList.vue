@@ -157,7 +157,7 @@
             //获取商品列表
             getGoodsList() {
                 this.loading = true;
-                this.$http.GET('/goods/list', {
+                this.$http.GET('/api/goods/list', {
                     page:this.page.num,
                     pageSize:this.page.size,
                     sort:this.sortFlag?1:-1,
@@ -224,7 +224,7 @@
 
             //加入购物车
             addCart(productId){
-                this.$http.POST('/goods/addCart', {
+                this.$http.POST('/api/goods/addCart', {
                     productId:productId,
                 }, (respData) => {
                     if(respData.status === '0'){

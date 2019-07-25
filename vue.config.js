@@ -4,8 +4,9 @@ var webpack = require('webpack');
 module.exports = {
     lintOnSave:false, // 取消代码检查
     productionSourceMap: false, // 是否生成 sourceMap 文件
+    publicPath: './',
     devServer: {
-        port: 5980, //端口
+        port: 59800, //端口
         // proxy:'http://192.168.2.15:3000',
     },
     configureWebpack:(config)=>{

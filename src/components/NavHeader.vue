@@ -34,8 +34,10 @@
                         <!--<a href="/" class="navbar-link">我的账户</a>-->
                         <span class="navbar-link"></span>
                         <span class="navbar-link" v-if="nickName">{{nickName}}</span>
-                        <a href="javascript:void(0)" class="navbar-link" v-if="!nickName" @click="registerModalFlag = true">注册</a>
-                        <a href="javascript:void(0)" class="navbar-link" v-if="!nickName" @click="loginModalFlag = true">登录</a>
+                        <a href="javascript:void(0)" class="navbar-link" v-if="!nickName"
+                           @click="registerModalFlag = true">注册</a>
+                        <a href="javascript:void(0)" class="navbar-link" v-if="!nickName"
+                           @click="loginModalFlag = true">登录</a>
                         <a href="javascript:void(0)" class="navbar-link" v-if="nickName" @click="logOut()">登出</a>
                         <div class="navbar-cart-container">
                             <span class="navbar-cart-count">{{cartCount}}</span>
@@ -144,15 +146,15 @@
                 errorTip: false,
                 loginModalFlag: false,
                 registerModalFlag: false,
-                errorTipText:''
+                errorTipText: ''
                 // nickName: '',
             }
         },
         mounted() {
             this.checkLogin();
         },
-        computed:{
-            ...mapState(['nickName','cartCount'])
+        computed: {
+            ...mapState(['nickName', 'cartCount'])
         },
         methods: {
 
@@ -163,14 +165,14 @@
                     this.errorTipText = '用户名或者密码不能为空';
                     return
                 }
-                this.$http.POST('/users/register', {
+                this.$http.POST('/api/users/register', {
                     userName: this.registerName,
                     userPwd: this.registerPwd,
                 }, (respData) => {
                     if (respData.status === '0') {
                         this.errorTip = false;
                         this.registerModalFlag = false;
-                        this.$store.commit('updateUserInf',respData.result.userName);
+                        this.$store.commit('updateUserInf', respData.result.userName);
                         this.getCartCount();
                     } else {
                         console.log(respData.msg);
@@ -182,11 +184,12 @@
 
             //登录
             login() {
+
                 if (!this.userName || !this.userPwd) {
                     this.errorTip = true;
                     return
                 }
-                this.$http.POST('/users/login', {
+                this.$http.POST('/api/users/login', {
                     userName: this.userName,
                     userPwd: this.userPwd,
                 }, (respData) => {
@@ -194,7 +197,7 @@
                         this.errorTip = false;
                         this.loginModalFlag = false;
                         // this.nickName = respData.result.userName;
-                        this.$store.commit('updateUserInf',respData.result.userName)
+                        this.$store.commit('updateUserInf', respData.result.userName)
                         this.getCartCount();
                     } else {
                         console.log(respData.msg)
@@ -204,11 +207,11 @@
 
             //登出
             logOut() {
-                this.$http.POST('/users/logout', {}, (respData) => {
+                this.$http.POST('/api/users/logout', {}, (respData) => {
                     if (respData.status === '0') {
                         // this.nickName = '';
-                        this.$store.commit('updateUserInf','');
-                        this.$store.commit('clearCartCount',0);
+                        this.$store.commit('updateUserInf', '');
+                        this.$store.commit('clearCartCount', 0);
                         this.$router.push('/')
                     } else {
                         console.log(respData.msg)
@@ -218,24 +221,24 @@
 
             //检查登录状态
             checkLogin() {
-                this.$http.GET('/users/checkLogin', {}, (respData) => {
-                    if(respData.status === '0'){
+                this.$http.GET('/api/users/checkLogin', {}, (respData) => {
+                    if (respData.status === '0') {
                         // this.nickName = respData.result.userName;
-                        this.$store.commit('updateUserInf',respData.result.userName);
+                        this.$store.commit('updateUserInf', respData.result.userName);
                         this.loginModalFlag = false;
                         this.getCartCount();
-                    }else{
+                    } else {
                         console.log(respData.msg)
                     }
                 })
             },
 
             //获取购物车商品数量
-            getCartCount(){
-                this.$http.GET('/users/getCartCount', {}, (respData) => {
-                    if(respData.status === '0'){
-                        this.$store.commit('updateCartCount',respData.result);
-                    }else{
+            getCartCount() {
+                this.$http.GET('/api/users/getCartCount', {}, (respData) => {
+                    if (respData.status === '0') {
+                        this.$store.commit('clearCartCount', respData.result);
+                    } else {
                         console.log(respData.msg)
                     }
                 })

@@ -168,7 +168,7 @@
         methods: {
             //获取购物车列表
             getCartList() {
-                this.$http.GET('/users/cartList', {}, (respData) => {
+                this.$http.GET('/api/users/cartList', {}, (respData) => {
                     if (respData.status === '0') {
                         this.cartList = respData.result;
 
@@ -190,7 +190,7 @@
             //结算
             payMent(){
                 var addressId = this.$route.query.addressId;
-                this.$http.POST('/users/payMent', {
+                this.$http.POST('/api/users/payMent', {
                     addressId:addressId,
                     orderTotal:this.orderTotal
                 }, (respData) => {
