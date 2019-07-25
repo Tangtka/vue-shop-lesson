@@ -36,7 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //解决跨域
 app.all('*', function (req, res, next) {
     // CORS配置
-    res.header("Access-Control-Allow-Origin", "http://localhost:5980");
+    res.header("Access-Control-Allow-Origin", "http://localhost:59800");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
     res.header("Access-Control-Allow-Credentials", true);
@@ -51,25 +51,26 @@ app.use((req, res, next) => {
     if (req.cookies.userId) {
         next();
     } else {
-        if (req.originalUrl == '/users/login' ||
-            req.originalUrl == '/users/logout' ||
-            req.originalUrl == '/users/register' ||
-            req.originalUrl.indexOf('/goods/list') > -1 ||
-            req.originalUrl == '/users/checkLogin') {
+        console.log(req.originalUrl);
+        if (req.originalUrl == '/api/users/login' ||
+            req.originalUrl == '/api/users/logout' ||
+            req.originalUrl == '/api/users/register' ||
+            req.originalUrl.indexOf('/api/goods/list') > -1 ||
+            req.originalUrl == '/api/users/checkLogin') {
             next();
         } else {
             res.json({
                 status: '10001',
                 msg: '当前未登录',
-                result: {}
+                result: ''
             })
         }
     }
 });
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/goods', goodsRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/goods', goodsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
