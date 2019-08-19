@@ -10,7 +10,7 @@ var usersRouter = require('./routes/users');
 var goodsRouter = require('./routes/goods');
 
 //连接mongoDB 数据库
-mongoose.connect('mongodb://pegasus.org.cn:27017/vue_shop');
+mongoose.connect('mongodb://xxx.org.cn:27017/vue_shop');
 mongoose.connection.on('connected', () => {
     console.log('连接成功...')
 });
