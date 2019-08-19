@@ -5,7 +5,7 @@ import qs from 'qs';
 const baseUrl = 'http://localhost:5980';
 const fileUploadUrl = '';
 const fileProjectName = '';
-const baseImgUrl = 'http://pegasus.org.cn:59889';
+const baseImgUrl = 'http://xxx.org.cn:59889';
 
 const axios = Axios.create({
     baseURL: baseUrl,
